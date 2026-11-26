@@ -28,6 +28,7 @@ class SqlEngine(Enum):
     VERTICA = "Vertica"
     ATHENA = "Athena"
     CLICKHOUSE = "ClickHouse"
+    STARROCKS = "StarRocks"
 
     @property
     def unsupported_granularities(self) -> Set[TimeGranularity]:
@@ -59,6 +60,9 @@ class SqlEngine(Enum):
             return {TimeGranularity.NANOSECOND, TimeGranularity.MICROSECOND}
         elif self is SqlEngine.CLICKHOUSE:
             return {TimeGranularity.NANOSECOND, TimeGranularity.MICROSECOND}
+        elif self is SqlEngine.STARROCKS:
+            # StarRocks DATETIME supports sub-second storage, but DATE_TRUNC only supports second-or-larger granularities.
+            return {TimeGranularity.NANOSECOND, TimeGranularity.MICROSECOND, TimeGranularity.MILLISECOND}
         else:
             assert_values_exhausted(self)
 

@@ -22,6 +22,7 @@ from metricflow.sql.render.duckdb_renderer import DuckDbSqlPlanRenderer
 from metricflow.sql.render.postgres import PostgresSQLSqlPlanRenderer
 from metricflow.sql.render.redshift import RedshiftSqlPlanRenderer
 from metricflow.sql.render.snowflake import SnowflakeSqlPlanRenderer
+from metricflow.sql.render.starrocks import StarRocksSqlPlanRenderer
 from metricflow.sql.render.sql_plan_renderer import SqlPlanRenderer
 from metricflow.sql.render.trino import TrinoSqlPlanRenderer
 from metricflow.sql.render.vertica import VerticaSqlPlanRenderer
@@ -54,6 +55,7 @@ class SupportedAdapterTypes(enum.Enum):
     TRINO = "trino"
     VERTICA = "vertica"
     CLICKHOUSE = "clickhouse"
+    STARROCKS = "starrocks"
 
     @property
     def sql_engine_type(self) -> SqlEngine:
@@ -78,6 +80,8 @@ class SupportedAdapterTypes(enum.Enum):
             return SqlEngine.VERTICA
         elif self is SupportedAdapterTypes.CLICKHOUSE:
             return SqlEngine.CLICKHOUSE
+        elif self is SupportedAdapterTypes.STARROCKS:
+            return SqlEngine.STARROCKS
         else:
             assert_values_exhausted(self)
 
@@ -104,6 +108,8 @@ class SupportedAdapterTypes(enum.Enum):
             return VerticaSqlPlanRenderer()
         elif self is SupportedAdapterTypes.CLICKHOUSE:
             return ClickHouseSqlPlanRenderer()
+        elif self is SupportedAdapterTypes.STARROCKS:
+            return StarRocksSqlPlanRenderer()
         else:
             assert_values_exhausted(self)
 
