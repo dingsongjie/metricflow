@@ -66,27 +66,17 @@ def add_use_persistent_source_schema_cli_flag(parser: _pytest.config.argparsing.
 
 def pytest_addoption(parser: _pytest.config.argparsing.Parser) -> None:
     """Add options for running pytest through the CLI."""
-    add_overwrite_snapshots_cli_flag(parser)
-    add_display_snapshots_cli_flag(parser)
-    add_display_graphs_cli_flag(parser)
-    add_use_persistent_source_schema_cli_flag(parser)
-
-
-def pytest_configure(config: _pytest.config.Config) -> None:
-    """Hook as specified by the pytest API for configuration."""
-    config.addinivalue_line(
-        name="markers",
-        line=f"{SQL_ENGINE_SNAPSHOT_MARKER_NAME}: mark tests as generating a snapshot specific to a SQL engine.",
-    )
-    config.addinivalue_line(
-        name="markers",
-        line=f"{DUCKDB_ONLY_MARKER_NAME}: mark tests as one that should only be run with DuckDB.",
-    )
-    config.addinivalue_line(
-        name="markers",
-        line=f"{CLICKHOUSE_ONLY_MARKER_NAME}: mark tests as one that should only be run with ClickHouse.",
-    )
-    mf_add_slow_marker(config)
+    for add_option in (
+        add_overwrite_snapshots_cli_flag,
+        add_display_snapshots_cli_flag,
+        add_display_graphs_cli_flag,
+        add_use_persistent_source_schema_cli_flag,
+    ):
+        try:
+            add_option(parser)
+        except ValueError:
+            # Option may already be registered if a conftest is loaded twice.
+            pass
 
 
 def check_sql_engine_snapshot_marker(request: FixtureRequest) -> None:

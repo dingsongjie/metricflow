@@ -220,3 +220,12 @@ filterwarnings = [
 ]
 python_functions = "test_* populate_source_schema"
 addopts = "--ignore tests_metricflow/performance/"
+
+[tool.hatch.envs.starrocks-env]
+description = "Dev environment for working with StarRocks"
+template = "dev-env"
+features = ["starrocks-env-requirements"]
+
+[tool.hatch.envs.starrocks-env.env-vars]
+MF_SQL_ENGINE_URL = "starrocks://root@localhost:9030"
+MF_SQL_ENGINE_PASSWORD = ""

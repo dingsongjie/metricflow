@@ -149,7 +149,7 @@ class SqlAlchemyDDLSqlClient(SqlAlchemyBasedSqlClient):
 
     def create_schema(self, schema_name: str) -> None:
         """Create schema if it doesn't exist."""
-        if self.sql_engine_type is SqlEngine.CLICKHOUSE:
+        if self.sql_engine_type in (SqlEngine.CLICKHOUSE, SqlEngine.STARROCKS):
             self.execute(f"CREATE DATABASE IF NOT EXISTS {schema_name}")
             return
         self.execute(f"CREATE SCHEMA IF NOT EXISTS {schema_name}")
@@ -157,7 +157,7 @@ class SqlAlchemyDDLSqlClient(SqlAlchemyBasedSqlClient):
     def drop_schema(self, schema_name: str, cascade: bool = True) -> None:
         """Drop schema if it exists."""
         cascade_clause = " CASCADE" if cascade else ""
-        if self.sql_engine_type is SqlEngine.CLICKHOUSE:
+        if self.sql_engine_type in (SqlEngine.CLICKHOUSE, SqlEngine.STARROCKS):
             # DROP DATABASE always removes its tables; there is no CASCADE keyword.
             self.execute(f"DROP DATABASE IF EXISTS {schema_name}")
             return

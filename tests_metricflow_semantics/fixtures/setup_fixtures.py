@@ -20,8 +20,12 @@ logger = logging.getLogger(__name__)
 
 def pytest_addoption(parser: _pytest.config.argparsing.Parser) -> None:
     """Add options for running pytest through the CLI."""
-    add_overwrite_snapshots_cli_flag(parser)
-    add_display_snapshots_cli_flag(parser)
+    for add_option in (add_overwrite_snapshots_cli_flag, add_display_snapshots_cli_flag):
+        try:
+            add_option(parser)
+        except ValueError:
+            # Option may already be registered if a conftest is loaded twice.
+            pass
 
 
 def mf_add_slow_marker(config: _pytest.config.Config) -> None:  # noqa: D103

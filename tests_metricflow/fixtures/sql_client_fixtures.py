@@ -21,6 +21,7 @@ from metricflow.sql.render.duckdb_renderer import DuckDbSqlPlanRenderer
 from metricflow.sql.render.postgres import PostgresSQLSqlPlanRenderer
 from metricflow.sql.render.redshift import RedshiftSqlPlanRenderer
 from metricflow.sql.render.snowflake import SnowflakeSqlPlanRenderer
+from metricflow.sql.render.starrocks import StarRocksSqlPlanRenderer
 from metricflow.sql.render.trino import TrinoSqlPlanRenderer
 from metricflow.sql.render.vertica import VerticaSqlPlanRenderer
 from tests_metricflow.fixtures.connection_url import SqlEngineConnectionParameterSet
@@ -84,6 +85,7 @@ def make_test_sql_client(url: str, password: str, schema: str) -> SqlClientWithD
         SqlDialect.TRINO: (SqlEngine.TRINO, TrinoSqlPlanRenderer()),
         SqlDialect.VERTICA: (SqlEngine.VERTICA, VerticaSqlPlanRenderer()),
         SqlDialect.CLICKHOUSE: (SqlEngine.CLICKHOUSE, ClickHouseSqlPlanRenderer()),
+        SqlDialect.STARROCKS: (SqlEngine.STARROCKS, StarRocksSqlPlanRenderer()),
     }
 
     if dialect not in dialect_mapping:

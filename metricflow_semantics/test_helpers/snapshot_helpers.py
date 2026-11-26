@@ -218,11 +218,15 @@ def add_display_snapshots_cli_flag(parser: _pytest.config.argparsing.Parser) -> 
 
 
 def add_overwrite_snapshots_cli_flag(parser: _pytest.config.argparsing.Parser) -> None:  # noqa: D103
-    parser.addoption(
-        OVERWRITE_SNAPSHOTS_CLI_FLAG,
-        action="store_true",
-        help="Create or update snapshots with generated output",
-    )
+    try:
+        parser.addoption(
+            OVERWRITE_SNAPSHOTS_CLI_FLAG,
+            action="store_true",
+            help="Create or update snapshots with generated output",
+        )
+    except ValueError:
+        # The option may already be registered when multiple conftest modules are loaded.
+        pass
 
 
 # In plan outputs, replace strings that vary from run to run with this so that comparisons can be made
